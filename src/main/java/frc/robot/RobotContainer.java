@@ -311,8 +311,8 @@ public class RobotContainer {
         joystick.povLeft().whileTrue(
             Commands.startEnd(
                 () -> {
-                    shooter.setPercentOutput(-0.25);  // Shooter geri
-                    feeder.reverse();                  // Feeder geri
+                    shooter.setRPM(-1500);  // Shooter geri (negatif RPM)
+                    feeder.reverse();        // Feeder geri
                 },
                 () -> {
                     shooter.stop();
@@ -336,10 +336,13 @@ public class RobotContainer {
             Commands.startEnd(() -> hopper.reverse(), () -> hopper.stop(), hopper));
 
         // ==================================================================
-        // LT -> FULL INTAKE (Kol asagi indir + Roller calistir)
+        // LT -> INTAKE: Sadece Roller calistir (Arm sabit kalir)
         // ==================================================================
         joystick.leftTrigger(0.5).whileTrue(
-            new IntakeCommand(intakeArm, intakeRoller));
+            Commands.startEnd(
+                () -> intakeRoller.run(),
+                () -> intakeRoller.stop(),
+                intakeRoller));
 
         // ==================================================================
         // Start -> SERVO TEST (basili tut = MAX, birak = DEFAULT)
